@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Flood Detector System</title>
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js"></script>
+    <script src="https://smtpjs.com/v3/smtp.js"></script> <!-- For email sending -->
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: linear-gradient(to bottom, #007bff, #ffffff);
+            text-align: center;
+            margin: 0;
+            padding: 0;
+        }
+        .container {
+            width: 350px;
+            margin: 80px auto;
+            padding: 20px;
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+        }
+        h2 {
+            color: #007bff;
+        }
+        button {
+            width: 100%;
+            padding: 12px;
+            margin: 10px 0;
+            background: #007bff;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+        button:hover {
+            background: #0056b3;
+        }
+        .dashboard {
+            display: none;
+            padding: 20px;
+        }
+        #flood-status {
+            font-size: 20px;
+            font-weight: bold;
+            color: #333;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- LOGIN FORM -->
+    <div class="container" id="login-form">
+        <h2>Flood Detector Login</h2>
+        <button onclick="signInWithGoogle()">Login / Sign Up with Google</button>
+    </div>
+
+    <!-- DASHBOARD -->
+    <div class="container dashboard" id="dashboard">
+        <h2>Welcome, <span id="user-name"></span></h2>
+        <p>Status: <span id="flood-status">Waiting for data...</span></p>
+        <button onclick="logout()">Logout</button>
+    </div>
+
+    <script>
+        // Firebase configuration (Replace with your Firebase credentials)
+        const firebaseConfig = {
+            apiKey: "YOUR_API_KEY",
+            authDomain: "YOUR_PROJECT_ID.firebaseapp.com",
+            projectId: "YOUR_PROJECT_ID",
+            storageBucket: "YOUR_PROJECT_ID.appspot.com",
+            messagingSenderId: "YOUR_MESSAGING_SENDER_ID",
+            appId: "YOUR_APP_ID"
+        };
+
+        // Initialize Firebase
+        firebase.initializeApp(firebaseConfig);
+        const auth = firebase.auth();
+        const provider = new firebase.auth.GoogleAuthProvider();
+
+        function signInWithGoogle() {
+            auth.signInWithPopup(provider).then((result) => {
+                const user = result.user;
+                document.getElementById("user-name").innerText = user.displayName;
+                document.getElementById("login-form").style.display = "none";
+                document.getElementById("dashboard").style.display = "block";
+                fetchFloodData();
+            }).catch((error) => {
+                alert("Login failed: " + error.message);
+            });
+        }
+
+        function logout() {
+            auth.signOut().then(() => {
+                document.getElementById("dashboard").style.display = "none";
+                document.getElementById("login-form").style.display = "block";
+            });
+        }
+
+        function requestNotificationPermission() {
+            if ("Notification" in
