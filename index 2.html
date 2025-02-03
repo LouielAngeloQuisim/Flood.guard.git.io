@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Flood Detector System</title>
+    <style>
+        body { font-family: Arial, sans-serif; background-color: #f4f4f4; text-align: center; }
+        .container { width: 300px; margin: 50px auto; padding: 20px; background: white; border-radius: 10px; box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); }
+        input { width: 100%; padding: 10px; margin: 10px 0; }
+        button { width: 100%; padding: 10px; background: blue; color: white; border: none; cursor: pointer; }
+        .hidden { display: none; }
+        .dashboard { display: none; padding: 20px; }
+        #flood-status { font-size: 20px; font-weight: bold; }
+    </style>
+</head>
+<body>
+    <!-- LOGIN FORM -->
+    <div class="container" id="login-form">
+        <h2>Login</h2>
+        <input type="text" id="login-user" placeholder="Username">
+        <input type="password" id="login-pass" placeholder="Password">
+        <button onclick="login()">Login</button>
+        <p>Don't have an account? <a href="#" onclick="showRegister()">Sign Up</a></p>
+    </div>
+
+    <!-- REGISTER FORM -->
+    <div class="container hidden" id="register-form">
+        <h2>Sign Up</h2>
+        <input type="text" id="reg-user" placeholder="Username">
+        <input type="password" id="reg-pass" placeholder="Password">
+        <button onclick="register()">Sign Up</button>
+        <p>Already have an account? <a href="#" onclick="showLogin()">Login</a></p>
+    </div>
+
+    <!-- DASHBOARD -->
+    <div class="dashboard" id="dashboard">
+        <h2>Flood Detector System</h2>
+        <p>Status: <span id="flood-status">Waiting for data...</span></p>
+        <button onclick="logout()">Logout</button>
+    </div>
+
+    <script>
+        function showRegister() {
+            document.getElementById("login-form").classList.add("hidden");
+            document.getElementById("register-form").classList.remove("hidden");
+        }
+
+        function showLogin() {
+            document.getElementById("register-form").classList.add("hidden");
+            document.getElementById("login-form").classList.remove("hidden");
+        }
+
+        function register() {
+            let user = document.getElementById("reg-user").value;
+            let pass = document.getElementById("reg-pass").value;
+
+            if (user && pass) {
+                if (localStorage.getItem(user)) {
+                    alert("Username already exists! Try another.");
+                } else {
+                    localStorage.setItem(user, pass);
+                    alert("Registration successful! You can now log in.");
+                    showLogin();
+                }
+            } else {
+                alert("Please fill in all fields.");
+            }
+        }
+
+        function login() {
+            let user = document.getElementById("login-user").value;
+            let pass = document.getElementById("login-pass").value;
+
+            if (localStorage.getItem(user) === pass) {
+                alert("Login successful!");
+                document.getElementById("login-form").classList.add("hidden");
+                document.getElementById("dashboard").style.display = "block";
+                fetchFloodData();
+            } else {
+                alert("Invalid username or password!");
+            }
+        }
+
+        function logout() {
+            document.getElementById("dashboard").style.display = "none";
+            document.getElementById("login-form").classList.remove("hidden");
+        }
+
+        function requestNotificationPermission() {
+            if ("Notification" in window) {
+                Notification.requestPermission().then(permission => {
+                    if (permission === "granted") {
+                        console.log("Notification permission granted.");
+                    }
+                });
+            }
+        }
+
+        function sendNotification(title, message) {
+            if (Notification.permission === "granted") {
+                new Notification(title, { body: message });
+            }
+        }
+
+        function sendEmailAlert() {
+            fetch("https://api.emailjs.com/api/v1.0/email/send", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({
+                    service_id: "your_emailjs_service_id",
+                    template_id: "your_emailjs_template_id",
+                    user_id: "your_emailjs_user_id",
+                    template_params: {
+                        message: "🚨 High flood risk detected! Take immediate action."
+                    }
+                })
+            })
+            .then(response => response.text())
+            .then(data => console.log("Email Sent:", data))
+            .catch(error => console.error("Error sending email:", error));
+        }
+
+        function fetchFloodData() {
+            setInterval(() => {
+                fetch("http://your-arduino-ip/flood-status") 
+                    .then(response => response.text())
+                    .then(data => {
+                        document.getElementById("flood-status").innerText = data;
+                        document.getElementById("flood-status").style.color = data === "High Risk!" ? "red" : "green";
+
+                        if (data === "High Risk!") {
+                            sendNotification("🚨 Flood Alert!", "High water levels detected! Take precautions.");
+                            sendEmailAlert();
+                        }
+                    })
+                    .catch(error => console.error("Error fetching flood data:", error));
+            }, 3000);
+        }
+
+        document.addEventListener("DOMContentLoaded", requestNotificationPermission);
+    </script>
+</body>
+</html>
