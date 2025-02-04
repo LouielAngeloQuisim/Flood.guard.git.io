@@ -1,0 +1,81 @@
+/* Apply a clean, modern look */
+body {
+    font-family: 'Poppins', sans-serif;
+    background: linear-gradient(to right, #1e3c72, #2a5298);
+    color: white;
+    text-align: center;
+    margin: 0;
+    padding: 0;
+}
+
+/* Container for the entire app */
+.container {
+    max-width: 450px;
+    margin: 5vh auto;
+    background: rgba(255, 255, 255, 0.2);
+    padding: 30px;
+    border-radius: 15px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+    backdrop-filter: blur(10px);
+}
+
+/* Headings */
+h1 {
+    font-size: 2rem;
+    font-weight: bold;
+    color: #f4f4f4;
+}
+
+h2 {
+    margin-top: 20px;
+    font-size: 1.5rem;
+    color: #f4f4f4;
+}
+
+/* Input fields */
+input {
+    width: 90%;
+    padding: 10px;
+    margin: 10px 0;
+    border: none;
+    border-radius: 5px;
+    font-size: 1rem;
+}
+
+/* Buttons */
+button {
+    width: 95%;
+    padding: 12px;
+    margin-top: 10px;
+    border: none;
+    border-radius: 5px;
+    background-color: #ff9800;
+    color: white;
+    font-size: 1rem;
+    font-weight: bold;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+button:hover {
+    background-color: #ff5722;
+}
+
+/* Logout Button */
+#logout-btn {
+    background-color: #e74c3c;
+    margin-top: 15px;
+}
+
+#logout-btn:hover {
+    background-color: #c0392b;
+}
+
+/* Flood Data Display */
+#flood-data {
+    margin-top: 30px;
+    font-size: 1.2rem;
+    padding: 15px;
+    background: rgba(0, 0, 0, 0.3);
+    border-radius: 10px;
+}
