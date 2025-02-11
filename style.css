@@ -1,0 +1,90 @@
+/* Global Styles */
+body {
+  margin: 0;
+  font-family: Arial, sans-serif;
+  background: #e0f7fa;  /* Light blue background for a water theme */
+  color: #333;
+}
+
+/* Container */
+.container {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 20px;
+}
+
+/* Header */
+header {
+  text-align: center;
+  margin-bottom: 30px;
+}
+
+header h1 {
+  color: #0277bd; /* Deep blue color */
+  font-size: 2.5em;
+  margin: 0;
+}
+
+/* Authentication Section */
+#auth-section {
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+#auth-section button {
+  background: #0277bd;
+  color: #fff;
+  border: none;
+  padding: 10px 20px;
+  margin: 5px;
+  border-radius: 4px;
+  font-size: 1em;
+  cursor: pointer;
+  transition: background 0.3s ease;
+}
+
+#auth-section button:hover {
+  background: #01579b;
+}
+
+/* Main Content Area */
+#main-content {
+  background: #fff;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+  padding: 20px;
+  margin-bottom: 20px;
+}
+
+/* Sensor Data Section */
+#sensor-data {
+  text-align: center;
+  margin-top: 20px;
+}
+
+#sensor-data h3 {
+  color: #0277bd;
+  margin-bottom: 10px;
+  font-size: 1.8em;
+}
+
+#sensor-data p {
+  font-size: 1.2em;
+  color: #555;
+}
+
+/* Responsive Design */
+@media (max-width: 600px) {
+  .container {
+    padding: 10px;
+  }
+
+  header h1 {
+    font-size: 2em;
+  }
+
+  #auth-section button {
+    padding: 8px 16px;
+    font-size: 0.9em;
+  }
+}
